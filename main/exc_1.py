@@ -16,9 +16,7 @@ Find the top 2 customers who spent the most money (net total amount) on transact
 
 Requirements:
 Use only credit transactions.
-
 Use either SQL or pandas (your choice).
-
 Return a table (or DataFrame) with:
 
 - customer_id
@@ -29,10 +27,31 @@ Sort from highest to lowest.
 Show only the top 2.
 """
 
-query_1 = """
-#SELECT * 
-#FROM transactions 
-#WHERE customer_id = '101'
-#"""
+#SQL 
 
-#tf.excecute_query(query_1,conn)
+query = """
+WITH credit_trans AS 
+(
+SELECT * 
+FROM transactions 
+WHERE type = 'credit'
+)
+
+SELECT c.customer_id, c.name, SUM(cr.amount) AS total_credit_amount
+FROM customers AS c
+JOIN credit_trans AS cr
+ON cr.customer_id = c.customer_id
+GROUP BY c.customer_id, c.name
+ORDER BY total_credit_amount DESC
+LIMIT 2
+"""
+
+tf.excecute_query(query,conn)
+
+#Python
+
+transactions_credit = transactions.loc[transactions['type'] == 'credit',:]
+trans_credit_users = pd.merge(transactions_credit, customers[['name','customer_id']], on='customer_id')
+trans_credit_users_grouped = trans_credit_users.groupby(['customer_id','name']).agg({'amount':'sum'}).reset_index().sort_values(by='amount', ascending=False).head(2)
+trans_credit_users_grouped = trans_credit_users_grouped[['customer_id','name', 'amount']].rename(columns={'amount':'total_credit_amount'})
+trans_credit_users_grouped
