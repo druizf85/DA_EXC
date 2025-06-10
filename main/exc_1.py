@@ -9,8 +9,27 @@ dfs = tf.create_df_variable(tables, conn)
 transactions = dfs['transactions']
 customers= dfs['customers']
 products = dfs['products']
- 
-#query_1 = """
+
+"""
+Problem Statement
+Find the top 2 customers who spent the most money (net total amount) on transactions, considering only successful credit transactions.
+
+Requirements:
+Use only credit transactions.
+
+Use either SQL or pandas (your choice).
+
+Return a table (or DataFrame) with:
+
+- customer_id
+- customer_name
+- total_credit_amount
+
+Sort from highest to lowest.
+Show only the top 2.
+"""
+
+query_1 = """
 #SELECT * 
 #FROM transactions 
 #WHERE customer_id = '101'
